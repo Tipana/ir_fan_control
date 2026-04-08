@@ -7,9 +7,8 @@
 Make IR-only fans and heaters feel native in Home Assistant by exposing them as `fan.*` entities.
 
 > **Quick Start**
-> 1. Install with HACS (recommended): click the button below
-> 2. Restart Home Assistant
-> 3. Add integration: **Settings -> Devices & Services -> Add Integration -> IR Fan Control**
+> 1. Install (**one-click HACS** recommended, or **manual** fallback)
+> 2. Add integration: **Settings -> Devices & Services -> Add Integration -> IR Fan Control**
 
 One-click add to HACS:
 
@@ -41,16 +40,21 @@ Home Assistant + Zigbee2MQTT can transmit IR, so this integration maps learned I
 - 🛡️ Stable pacing profile (`stable-v1`) with stale-command cancellation.
 
 ## Install
-### Primary: Install with HACS
+### Step 1A (recommended): One-click HACS install
 1. Use the one-click HACS button above.
 2. In HACS, confirm adding this as a custom repository (`integration`).
 3. Install **IR Fan Control** from HACS.
 4. Restart Home Assistant.
 
-### Fallback: Manual install
+### Step 1B (fallback): Manual install
 1. Copy `custom_components/ir_fan_control` into `/config/custom_components/`.
 2. Restart Home Assistant.
-3. Add integration: **Settings -> Devices & Services -> Add Integration -> IR Fan Control**.
+
+### Step 2: Add integration
+1. Open **Settings -> Devices & Services**.
+2. Click **Add Integration**.
+3. Search **IR Fan Control**.
+4. Fill in MQTT topic + IR codes.
 
 Note: manual installs do not receive updates through HACS. You must update files manually.
 
