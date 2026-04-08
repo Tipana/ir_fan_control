@@ -86,12 +86,23 @@ class IRFanControl(FanEntity, RestoreEntity):
         self._turbo = data.get(CONF_TURBO_CODE) if self._has_turbo else None
 
         self._has_dir = data.get(CONF_HAS_DIRECTION, False)
-        self._direction_idle = bool(data.get(CONF_DIRECTION_IDLE, DEFAULT_DIRECTION_IDLE))
+        self._direction_idle = bool(
+            data.get(CONF_DIRECTION_IDLE, DEFAULT_DIRECTION_IDLE)
+        )
         self._left = data.get(CONF_LOUVER_LEFT)
         self._right = data.get(CONF_LOUVER_RIGHT)
-        self._left_label = str(data.get(CONF_LEFT_LABEL, DEFAULT_LEFT_LABEL)).strip() or DEFAULT_LEFT_LABEL
-        self._right_label = str(data.get(CONF_RIGHT_LABEL, DEFAULT_RIGHT_LABEL)).strip() or DEFAULT_RIGHT_LABEL
-        self._idle_label = str(data.get(CONF_IDLE_LABEL, DEFAULT_IDLE_LABEL)).strip() or DEFAULT_IDLE_LABEL
+        self._left_label = (
+            str(data.get(CONF_LEFT_LABEL, DEFAULT_LEFT_LABEL)).strip()
+            or DEFAULT_LEFT_LABEL
+        )
+        self._right_label = (
+            str(data.get(CONF_RIGHT_LABEL, DEFAULT_RIGHT_LABEL)).strip()
+            or DEFAULT_RIGHT_LABEL
+        )
+        self._idle_label = (
+            str(data.get(CONF_IDLE_LABEL, DEFAULT_IDLE_LABEL)).strip()
+            or DEFAULT_IDLE_LABEL
+        )
 
         self._has_osc = data.get(CONF_HAS_OSC, False)
         self._osc_mode = str(data.get(CONF_OSC_MODE, DEFAULT_OSC_MODE))
@@ -121,9 +132,19 @@ class IRFanControl(FanEntity, RestoreEntity):
         if self._control_mode == "buttons" and self._has_turbo and self._turbo:
             self._preset_actions["turbo"] = self._turbo
 
-        if self._has_osc and self._osc_up and self._osc_down and self._osc_mode == "toggle":
+        if (
+            self._has_osc
+            and self._osc_up
+            and self._osc_down
+            and self._osc_mode == "toggle"
+        ):
             self._attr_supported_features |= FEATURE_OSCILLATE
-        elif self._has_osc and self._osc_up and self._osc_down and self._osc_mode == "levels":
+        elif (
+            self._has_osc
+            and self._osc_up
+            and self._osc_down
+            and self._osc_mode == "levels"
+        ):
             self._preset_actions["osc_less"] = self._osc_down
             self._preset_actions["osc_more"] = self._osc_up
 
@@ -145,7 +166,9 @@ class IRFanControl(FanEntity, RestoreEntity):
         self._pacing_profile = "stable-v1"
         self._tx_clear_delay = min(0.08, max(0.02, self._pulse_delay / 4))
         self._step_delay_slider = max(0.45, self._pulse_delay)
-        self._step_delay_buttons = max(0.25, min(self._step_delay_slider, self._pulse_delay * 0.7))
+        self._step_delay_buttons = max(
+            0.25, min(self._step_delay_slider, self._pulse_delay * 0.7)
+        )
         self._mode_settle_delay = max(0.35, self._step_delay_buttons)
 
     async def async_added_to_hass(self) -> None:
@@ -228,7 +251,9 @@ class IRFanControl(FanEntity, RestoreEntity):
         return op_token is not None and op_token != self._op_generation
 
     async def _sleep_step(self, mode: str, op_token: int | None = None) -> bool:
-        delay = self._step_delay_buttons if mode == "buttons" else self._step_delay_slider
+        delay = (
+            self._step_delay_buttons if mode == "buttons" else self._step_delay_slider
+        )
         await asyncio.sleep(delay)
         return not self._is_stale(op_token)
 
@@ -277,7 +302,9 @@ class IRFanControl(FanEntity, RestoreEntity):
         if self._is_stale(op_token):
             return False
         if not self._turbo_active:
-            self._pre_turbo_step = max(1, min(self._step_count, self._current_step or 1))
+            self._pre_turbo_step = max(
+                1, min(self._step_count, self._current_step or 1)
+            )
         await self._send_ir(self._turbo)
         if self._is_stale(op_token):
             return False
@@ -338,7 +365,10 @@ class IRFanControl(FanEntity, RestoreEntity):
 
     async def async_turn_off(self, **kwargs):
         self._start_operation()
-        if self._control_mode != "buttons" and monotonic() < self._suppress_turn_off_until:
+        if (
+            self._control_mode != "buttons"
+            and monotonic() < self._suppress_turn_off_until
+        ):
             self._suppress_turn_off_until = 0.0
             self._attr_is_on = True
             self._ensure_on_step()
@@ -350,7 +380,9 @@ class IRFanControl(FanEntity, RestoreEntity):
         self._attr_is_on = False
         self._attr_percentage = 0
         self._current_step = 0
-        self._attr_preset_mode = self._idle_label if self._idle_label in self._preset_actions else None
+        self._attr_preset_mode = (
+            self._idle_label if self._idle_label in self._preset_actions else None
+        )
         self.async_write_ha_state()
         await self._send_ir(self._power)
 
@@ -453,13 +485,20 @@ class IRFanControl(FanEntity, RestoreEntity):
         self._turbo_active = False
         self.async_write_ha_state()
 
-    async def async_set_preset_mode(self, preset_mode: str, _op_token: int | None = None):
+    async def async_set_preset_mode(
+        self, preset_mode: str, _op_token: int | None = None
+    ):
         if preset_mode not in self._preset_actions:
             return
 
         op_token = _op_token if _op_token is not None else self._start_operation()
 
-        if preset_mode == "turbo" and self._control_mode == "buttons" and self._has_turbo and self._turbo:
+        if (
+            preset_mode == "turbo"
+            and self._control_mode == "buttons"
+            and self._has_turbo
+            and self._turbo
+        ):
             if self._turbo_active:
                 ok = await self._exit_turbo(op_token=op_token)
                 if not ok:
@@ -468,7 +507,9 @@ class IRFanControl(FanEntity, RestoreEntity):
                 ok = await self._enter_turbo(op_token=op_token)
                 if not ok:
                     return
-        elif preset_mode in ("increase", "decrease") and self._control_mode == "buttons":
+        elif (
+            preset_mode in ("increase", "decrease") and self._control_mode == "buttons"
+        ):
             self._ensure_on_step()
             if self._turbo_active:
                 ok = await self._exit_turbo(op_token=op_token)

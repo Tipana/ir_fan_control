@@ -37,7 +37,7 @@ from .const import (
     DEFAULT_PULSE_DELAY,
     DEFAULT_RIGHT_LABEL,
     DEFAULT_STEP_COUNT,
-DOMAIN,
+    DOMAIN,
 )
 
 CONF_SETUP_MODE = "setup_mode"
@@ -49,7 +49,9 @@ def _build_schema(defaults=None) -> vol.Schema:
         defaults = {}
     return vol.Schema(
         {
-            vol.Required(CONF_NAME, default=defaults.get(CONF_NAME, DEFAULT_NAME)): cv.string,
+            vol.Required(
+                CONF_NAME, default=defaults.get(CONF_NAME, DEFAULT_NAME)
+            ): cv.string,
             vol.Required(CONF_TOPIC, default=defaults.get(CONF_TOPIC, "")): cv.string,
             vol.Required(
                 CONF_POWER_CODE, default=defaults.get(CONF_POWER_CODE, "")
@@ -63,12 +65,16 @@ def _build_schema(defaults=None) -> vol.Schema:
             vol.Optional(
                 CONF_HAS_TURBO, default=defaults.get(CONF_HAS_TURBO, True)
             ): cv.boolean,
-            vol.Optional(CONF_TURBO_CODE, default=defaults.get(CONF_TURBO_CODE, "")): cv.string,
             vol.Optional(
-                CONF_STEP_COUNT, default=defaults.get(CONF_STEP_COUNT, DEFAULT_STEP_COUNT)
+                CONF_TURBO_CODE, default=defaults.get(CONF_TURBO_CODE, "")
+            ): cv.string,
+            vol.Optional(
+                CONF_STEP_COUNT,
+                default=defaults.get(CONF_STEP_COUNT, DEFAULT_STEP_COUNT),
             ): vol.All(int, vol.Range(min=2, max=6)),
             vol.Optional(
-                CONF_CONTROL_MODE, default=defaults.get(CONF_CONTROL_MODE, DEFAULT_CONTROL_MODE)
+                CONF_CONTROL_MODE,
+                default=defaults.get(CONF_CONTROL_MODE, DEFAULT_CONTROL_MODE),
             ): vol.In({"slider": "slider", "buttons": "buttons"}),
             vol.Optional(
                 CONF_PULSE_DELAY,
@@ -81,25 +87,34 @@ def _build_schema(defaults=None) -> vol.Schema:
                 CONF_DIRECTION_IDLE,
                 default=defaults.get(CONF_DIRECTION_IDLE, DEFAULT_DIRECTION_IDLE),
             ): cv.boolean,
-            vol.Optional(CONF_LOUVER_LEFT, default=defaults.get(CONF_LOUVER_LEFT, "")): cv.string,
+            vol.Optional(
+                CONF_LOUVER_LEFT, default=defaults.get(CONF_LOUVER_LEFT, "")
+            ): cv.string,
             vol.Optional(
                 CONF_LOUVER_RIGHT, default=defaults.get(CONF_LOUVER_RIGHT, "")
             ): cv.string,
             vol.Optional(
-                CONF_LEFT_LABEL, default=defaults.get(CONF_LEFT_LABEL, DEFAULT_LEFT_LABEL)
+                CONF_LEFT_LABEL,
+                default=defaults.get(CONF_LEFT_LABEL, DEFAULT_LEFT_LABEL),
             ): cv.string,
             vol.Optional(
-                CONF_RIGHT_LABEL, default=defaults.get(CONF_RIGHT_LABEL, DEFAULT_RIGHT_LABEL)
+                CONF_RIGHT_LABEL,
+                default=defaults.get(CONF_RIGHT_LABEL, DEFAULT_RIGHT_LABEL),
             ): cv.string,
             vol.Optional(
-                CONF_IDLE_LABEL, default=defaults.get(CONF_IDLE_LABEL, DEFAULT_IDLE_LABEL)
+                CONF_IDLE_LABEL,
+                default=defaults.get(CONF_IDLE_LABEL, DEFAULT_IDLE_LABEL),
             ): cv.string,
-            vol.Optional(CONF_HAS_OSC, default=defaults.get(CONF_HAS_OSC, False)): cv.boolean,
+            vol.Optional(
+                CONF_HAS_OSC, default=defaults.get(CONF_HAS_OSC, False)
+            ): cv.boolean,
             vol.Optional(
                 CONF_OSC_MODE, default=defaults.get(CONF_OSC_MODE, DEFAULT_OSC_MODE)
             ): vol.In({"none": "none", "toggle": "toggle", "levels": "levels"}),
             vol.Optional(CONF_OSC_UP, default=defaults.get(CONF_OSC_UP, "")): cv.string,
-            vol.Optional(CONF_OSC_DOWN, default=defaults.get(CONF_OSC_DOWN, "")): cv.string,
+            vol.Optional(
+                CONF_OSC_DOWN, default=defaults.get(CONF_OSC_DOWN, "")
+            ): cv.string,
         }
     )
 
@@ -168,7 +183,9 @@ class IRFanControlConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             return self.async_create_entry(title=user_input[CONF_NAME], data=user_input)
 
         return self.async_show_form(
-            step_id="configure", data_schema=_build_schema(self._defaults), errors=errors
+            step_id="configure",
+            data_schema=_build_schema(self._defaults),
+            errors=errors,
         )
 
     async def async_step_import(self, user_input=None):
