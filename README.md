@@ -58,12 +58,6 @@ Home Assistant + Zigbee2MQTT can transmit IR, so this integration maps learned I
 
 Note: manual installs do not receive updates through HACS. You must update files manually.
 
-### Add integration
-1. Open **Settings -> Devices & Services**
-2. Click **Add Integration**
-3. Search **IR Fan Control**
-4. Fill in MQTT topic + IR codes
-
 ## Configuration
 Required:
 - `name`
