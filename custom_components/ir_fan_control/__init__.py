@@ -118,7 +118,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
         else:
             await hass.config_entries.async_forward_entry_setup(entry, Platform.FAN)
-    except Exception as err:  # pragma: no cover - debug visibility
+    except Exception:  # pragma: no cover - debug visibility
         _LOGGER.exception("ir_fan_control setup failed for %s", entry.entry_id)
         return False
 
