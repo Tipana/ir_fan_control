@@ -11,22 +11,10 @@ Make IR-only fans and heaters feel native in Home Assistant by exposing them as 
 > 2. Restart Home Assistant
 > 3. Add integration: **Settings -> Devices & Services -> Add Integration -> IR Fan Control**
 
-> **One-command deploy (this repo -> live HA)**
-> ```bash
-> ./deploy.sh
-> ```
-
-> **Quick lint check**
-> ```bash
-> ./lint.sh
-> ```
-
 ## Table of Contents
 - [Why This Exists](#why-this-exists)
 - [Features](#features)
 - [Install](#install)
-- [Deploy Workflow](#deploy-workflow)
-- [Linting](#linting)
 - [Configuration](#configuration)
 - [Automation Examples](#automation-examples)
 - [Screenshots](#screenshots)
@@ -66,26 +54,6 @@ git clone https://github.com/Tipana/ir_fan_control.git ir_fan_control
 3. Search **IR Fan Control**
 4. Fill in MQTT topic + IR codes
 
-## Deploy Workflow
-Use this repository as your source of truth, then deploy changes into live HA:
-
-```bash
-./deploy.sh
-```
-
-If `/Volumes/config` is not mounted, the script exits with a clear message and does nothing.
-
-## Linting
-Run:
-
-```bash
-./lint.sh
-```
-
-What it does:
-- syntax-checks all Python files in `custom_components/ir_fan_control`
-- runs `ruff` checks if `ruff` is installed
-
 ## Configuration
 Required:
 - `name`
@@ -123,10 +91,8 @@ Common options:
 ```
 
 ## Screenshots
-<p>
-  <img src="custom_components/ir_fan_control/docs/fan-heater-tile-size.png" alt="Fan and heater tiles" height="280" />
-  <img src="custom_components/ir_fan_control/docs/fan-preset-mode-menu.png" alt="Preset mode menu" height="280" />
-</p>
+<img src="custom_components/ir_fan_control/docs/fan-heater-tile-size.png" alt="Fan and heater tiles" width="48%" />
+<img src="custom_components/ir_fan_control/docs/fan-preset-mode-menu.png" alt="Preset mode menu" width="48%" />
 
 ## Troubleshooting
 - **Icon/branding not updating**
@@ -154,3 +120,7 @@ A: No. That label is owned by the Home Assistant frontend card.
 
 **Q: Why does this integration use pacing?**  
 A: Repeated IR sends over Zigbee can queue under load. `stable-v1` spaces bursts and cancels stale operations to keep control consistent.
+
+---
+
+Maintainer/developer workflow (`deploy.sh`, `lint.sh`) is documented in `DEVELOPMENT.md`.

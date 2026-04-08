@@ -1,9 +1,11 @@
 *
 !.gitignore
 !README.md
+!DEVELOPMENT.md
 !LICENSE
 !deploy.sh
 !lint.sh
 !custom_components/
 !custom_components/ir_fan_control/
 !custom_components/ir_fan_control/**
+custom_components/ir_fan_control/DO_NOT_EDIT_HERE.txt
