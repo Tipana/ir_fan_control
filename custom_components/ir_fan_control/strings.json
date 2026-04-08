@@ -1,0 +1,71 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "IR Fan Control",
+        "description": "Create a new entry or duplicate an existing one.",
+        "data": {
+          "setup_mode": "Setup mode"
+        }
+      },
+      "configure": {
+        "title": "IR Fan Control",
+        "description": "Configure the IR-controlled fan via Zigbee2MQTT.",
+        "data": {
+          "name": "Name",
+          "topic": "MQTT topic (e.g. zigbee2mqtt/parents_ir_sender/set)",
+          "power_code": "Power IR code",
+          "speed_up_code": "Speed Up IR code",
+          "speed_down_code": "Speed Down IR code",
+          "has_turbo": "Turbo/Boost available",
+          "turbo_code": "Turbo IR code",
+          "step_count": "Number of speed steps (2-6, excludes turbo)",
+          "pulse_delay": "Delay between pulses (seconds)",
+          "has_direction": "Enable two single-press action buttons",
+          "louver_left_code": "Action button A IR code (e.g. Timer)",
+          "louver_right_code": "Action button B IR code (e.g. Sensor)",
+          "left_label": "Action button A label",
+          "right_label": "Action button B label",
+          "idle_label": "Idle button label (optional)",
+          "has_osc": "Enable oscillation controls",
+          "osc_mode": "Oscillation mode (none/toggle/levels)",
+          "control_mode": "Control mode (slider/buttons)",
+          "direction_idle": "Show idle button for direction/actions",
+          "osc_up_code": "Oscillate on IR code",
+          "osc_down_code": "Oscillate off IR code"
+        }
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Edit IR Fan Control",
+        "description": "Update MQTT topic, speed mapping, and optional features.",
+        "data": {
+          "name": "Name",
+          "topic": "MQTT topic (e.g. zigbee2mqtt/parents_ir_sender/set)",
+          "power_code": "Power IR code",
+          "speed_up_code": "Speed Up IR code",
+          "speed_down_code": "Speed Down IR code",
+          "has_turbo": "Turbo/Boost available",
+          "turbo_code": "Turbo IR code",
+          "step_count": "Number of speed steps (2-6, excludes turbo)",
+          "pulse_delay": "Delay between pulses (seconds)",
+          "has_direction": "Enable two single-press action buttons",
+          "louver_left_code": "Action button A IR code (e.g. Timer)",
+          "louver_right_code": "Action button B IR code (e.g. Sensor)",
+          "left_label": "Action button A label",
+          "right_label": "Action button B label",
+          "idle_label": "Idle button label (optional)",
+          "has_osc": "Enable oscillation controls",
+          "osc_mode": "Oscillation mode (none/toggle/levels)",
+          "control_mode": "Control mode (slider/buttons)",
+          "direction_idle": "Show idle button for direction/actions",
+          "osc_up_code": "Oscillate on IR code",
+          "osc_down_code": "Oscillate off IR code"
+        }
+      }
+    }
+  }
+}

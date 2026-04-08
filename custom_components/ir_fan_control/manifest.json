@@ -1,0 +1,10 @@
+{
+  "domain": "ir_fan_control",
+  "name": "IR Fan Control",
+  "version": "0.1.6",
+  "documentation": "https://github.com/Tipana/ir_fan_control",
+  "requirements": [],
+  "dependencies": ["mqtt"],
+  "codeowners": ["@tipana"],
+  "config_flow": true
+}
