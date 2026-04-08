@@ -1,132 +1,124 @@
-# IR Fan Control (Custom Integration)
+# IR Fan Control
 
-Repository: https://github.com/Tipana/ir_fan_control
+[![Version](https://img.shields.io/badge/version-v0.1.6-2ea043.svg)](https://github.com/Tipana/ir_fan_control)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Custom%20Integration-41BDF5.svg)](https://www.home-assistant.io/)
 
-Native Home Assistant fan entity that sends IR codes through Zigbee2MQTT.
+Make IR-only fans and heaters feel native in Home Assistant by exposing them as `fan.*` entities.
 
-## What's New in v0.1.6
-- Added `stable-v1` pacing profile inside the fan entity runtime.
-- Added stale-command cancellation so older queued actions cannot overwrite newer presses.
-- Improved button/slider timing separation for more predictable command flow on busy Zigbee networks.
+> **Quick Start**
+> 1. Copy `custom_components/ir_fan_control` into `/config/custom_components/`
+> 2. Restart Home Assistant
+> 3. Add integration: **Settings -> Devices & Services -> Add Integration -> IR Fan Control**
 
-It supports:
-- Variable speed fan control (2-6 steps)
-- Optional turbo/boost
-- Optional action buttons (for left/right, timer/sensor, etc.)
-- Optional oscillation in `toggle` or `levels` mode
-- `slider` or `buttons` control style
+## Table of Contents
+- [Why This Exists](#why-this-exists)
+- [Features](#features)
+- [Install](#install)
+- [Configuration](#configuration)
+- [Automation Examples](#automation-examples)
+- [Screenshots](#screenshots)
+- [Troubleshooting](#troubleshooting)
+- [FAQ](#faq)
 
-## Requirements
-- Home Assistant with MQTT configured
-- Zigbee2MQTT IR sender working
-- MQTT topic for IR send, usually `zigbee2mqtt/<device_name>/set`
-- Base64 IR codes for each function you want to expose
+## Why This Exists
+This project started around the Shark Pro Mist fan and matching Shark heaters.  
+Great hardware, no practical smart integration.
 
-## Installation
-1. Copy `custom_components/ir_fan_control/` into `/config/custom_components/`.
-2. Restart Home Assistant.
-3. Go to Settings -> Devices and Services -> Add Integration -> `IR Fan Control`.
+Home Assistant + Zigbee2MQTT can transmit IR, so this integration maps learned IR codes into clean, automatable entities without template/script sprawl.
 
-## Configuration Reference
-Required fields:
+## Features
+- 🌬️ Exposes IR devices as native `fan.*` entities.
+- 🔢 Handles discrete speed steps (`2` to `6`).
+- ⚡ Optional turbo/boost command.
+- 🎛️ Optional extra action buttons (left/right or timer/sensor style actions).
+- 🌀 Oscillation modes: `toggle` or `levels`.
+- 🧭 UI control mode: `slider` or `buttons`.
+- 🛡️ Stable pacing profile (`stable-v1`) with stale-command cancellation.
+
+## Install
+### Option A: Git clone (recommended)
+```bash
+cd /config/custom_components
+git clone https://github.com/Tipana/ir_fan_control.git ir_fan_control
+```
+
+### Option B: Download ZIP
+1. Download this repository as ZIP.
+2. Extract to `/config/custom_components/ir_fan_control`.
+3. Restart Home Assistant.
+
+### Add integration
+1. Open **Settings -> Devices & Services**
+2. Click **Add Integration**
+3. Search **IR Fan Control**
+4. Fill in MQTT topic + IR codes
+
+## Configuration
+Required:
 - `name`
-- `topic`
+- `topic` (normally `zigbee2mqtt/<device>/set`)
 - `power_code`
 - `speed_up_code`
 - `speed_down_code`
 
-Main options:
-- `control_mode`
-  - `slider`: normal percentage slider UI
-  - `buttons`: single-press `increase`/`decrease` actions in preset list
-- `step_count`: number of discrete speed steps (`2-6`)
-- `pulse_delay`: base delay between repeated pulses (recommended `0.5` to `1.0` on busy Zigbee)
-- `has_turbo` + `turbo_code`: optional boost mode
-- `has_direction`: enables action A/B buttons
-  - `louver_left_code` and `louver_right_code` are generic single-press action codes
-  - `left_label` and `right_label` rename these buttons (example: `Timer`, `Sensor`)
-- `direction_idle`: if enabled, preset returns to `idle` after action button press
-- `has_osc` + `osc_mode`
-  - `none`: hide oscillation controls
-  - `toggle`: use oscillate on/off behavior
-  - `levels`: show only `osc_less` and `osc_more` presets
-- `osc_up_code` / `osc_down_code`: oscillation codes
-
-## Pacing Profile
-`stable-v1` is always enabled in this release.
-
-It applies:
-- fast clear delay for each publish (`ir_code_to_send` -> `null`)
-- slower repeated-step pacing for slider mode
-- slightly faster repeated-step pacing for buttons mode
-- stale-operation cancellation whenever a newer command arrives
-
-This is designed to reduce delayed command replay under high UI/event load.
-
-## Recommended Profiles
-### Fan (5 speeds + turbo)
-- `control_mode`: `buttons` or `slider` (your preference)
-- `step_count`: `5`
-- `has_turbo`: `true`
-- `has_osc`: `true`
-- `osc_mode`: `levels`
-- `has_direction`: `true` if you want extra action buttons
-
-### Heater (power + increase + decrease)
-- `control_mode`: `buttons`
-- `step_count`: `3` (or device equivalent)
-- `has_turbo`: `false`
-- `has_osc`: `false`
-- Optional `has_direction`: `true` for `Timer` / `Sensor` single-press buttons
-
-## UI Behavior Notes
-- Preset label text (`Preset mode`) is defined by Home Assistant frontend and cannot be renamed by integration code.
-- If `direction_idle` is enabled, action presets return to `idle` after firing.
-- In `osc_mode: levels`, `osc_on` and `osc_off` are hidden by design.
-- If fan and heater tile heights look different, verify both entries use the same `control_mode`.
+Common options:
+- `control_mode`: `slider` or `buttons`
+- `step_count`: `2-6`
+- `pulse_delay`: default `0.5` works well on busy Zigbee networks
+- `has_turbo` + `turbo_code`
+- `has_direction` + `louver_left_code` + `louver_right_code`
+- `left_label` / `right_label` for custom button names
+- `direction_idle` to auto-return action preset to `idle`
+- `has_osc` + `osc_mode` (`none` / `toggle` / `levels`)
+- `osc_up_code` / `osc_down_code`
 
 ## Automation Examples
-Turn on:
 ```yaml
 - service: fan.turn_on
   target:
     entity_id: fan.parents_bedroom_fan_ir
-```
 
-Set speed:
-```yaml
 - service: fan.set_percentage
   target:
     entity_id: fan.parents_bedroom_fan_ir
   data:
     percentage: 60
-```
 
-Turn off:
-```yaml
 - service: fan.turn_off
   target:
     entity_id: fan.parents_bedroom_fan_ir
 ```
 
-## Troubleshooting
-- No IR response:
-  - Verify MQTT topic points to `/set`
-  - Confirm codes are valid base64 strings
-  - Increase `pulse_delay` to reduce Zigbee congestion
-- Delayed or out-of-order actions:
-  - Close duplicate HA dashboard sessions/tabs
-  - Confirm system has no websocket overload warnings
-- Config dialog error:
-  - Restart HA and reopen integration options
-- Entity missing controls:
-  - Check corresponding `has_*` flags and code fields are populated
-
 ## Screenshots
-Preset menu with action controls:
+<p>
+  <img src="custom_components/ir_fan_control/docs/fan-heater-tile-size.png" alt="Fan and heater tiles" height="280" />
+  <img src="custom_components/ir_fan_control/docs/fan-preset-mode-menu.png" alt="Preset mode menu" height="280" />
+</p>
 
-![Preset mode menu](docs/fan-preset-mode-menu.png)
+## Troubleshooting
+- **Icon/branding not updating**
+  - Restart Home Assistant
+  - Hard refresh app/browser cache
+- **IR not firing**
+  - Confirm topic uses `/set`
+  - Validate base64 codes
+  - Increase `pulse_delay` if network is congested
+- **Commands feel delayed**
+  - Close extra dashboard tabs/sessions
+  - Check HA logs for websocket backlog warnings
+- **Controls missing**
+  - Check corresponding `has_*` options and codes are set
 
-Dashboard example with fan + heater entities:
+## FAQ
+**Q: Is this only for Shark devices?**  
+A: No. Any IR-controlled fan/heater works if you provide valid codes.
 
-![Fan and heater tiles](docs/fan-heater-tile-size.png)
+**Q: Can I use this for heater timer/sensor buttons?**  
+A: Yes. Use `has_direction`, then map those two buttons to any one-shot IR actions and relabel them.
+
+**Q: Can I rename "Preset mode"?**  
+A: No. That label is owned by the Home Assistant frontend card.
+
+**Q: Why does this integration use pacing?**  
+A: Repeated IR sends over Zigbee can queue under load. `stable-v1` spaces bursts and cancels stale operations to keep control consistent.
