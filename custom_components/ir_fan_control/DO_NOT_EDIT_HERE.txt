@@ -1,0 +1,12 @@
+DO NOT EDIT THIS LIVE FOLDER DIRECTLY
+
+Live path:
+/config/custom_components/ir_fan_control
+
+Source-of-truth repo path:
+/config/ha_vibecode_git/custom_components/ir_fan_control
+
+Workflow:
+1) Edit in ha_vibecode_git
+2) Run ./deploy.sh from /config/ha_vibecode_git
+3) Restart Home Assistant
