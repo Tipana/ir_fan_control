@@ -5,6 +5,9 @@
 !LICENSE
 !deploy.sh
 !lint.sh
+!.github/
+!.github/workflows/
+!.github/workflows/**
 !custom_components/
 !custom_components/ir_fan_control/
 !custom_components/ir_fan_control/**
