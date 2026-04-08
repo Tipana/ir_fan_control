@@ -11,10 +11,16 @@ Make IR-only fans and heaters feel native in Home Assistant by exposing them as 
 > 2. Restart Home Assistant
 > 3. Add integration: **Settings -> Devices & Services -> Add Integration -> IR Fan Control**
 
+> **One-command deploy (this repo -> live HA)**
+> ```bash
+> ./deploy.sh
+> ```
+
 ## Table of Contents
 - [Why This Exists](#why-this-exists)
 - [Features](#features)
 - [Install](#install)
+- [Deploy Workflow](#deploy-workflow)
 - [Configuration](#configuration)
 - [Automation Examples](#automation-examples)
 - [Screenshots](#screenshots)
@@ -53,6 +59,15 @@ git clone https://github.com/Tipana/ir_fan_control.git ir_fan_control
 2. Click **Add Integration**
 3. Search **IR Fan Control**
 4. Fill in MQTT topic + IR codes
+
+## Deploy Workflow
+Use this repository as your source of truth, then deploy changes into live HA:
+
+```bash
+./deploy.sh
+```
+
+If `/Volumes/config` is not mounted, the script exits with a clear message and does nothing.
 
 ## Configuration
 Required:
