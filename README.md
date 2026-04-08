@@ -16,11 +16,17 @@ Make IR-only fans and heaters feel native in Home Assistant by exposing them as 
 > ./deploy.sh
 > ```
 
+> **Quick lint check**
+> ```bash
+> ./lint.sh
+> ```
+
 ## Table of Contents
 - [Why This Exists](#why-this-exists)
 - [Features](#features)
 - [Install](#install)
 - [Deploy Workflow](#deploy-workflow)
+- [Linting](#linting)
 - [Configuration](#configuration)
 - [Automation Examples](#automation-examples)
 - [Screenshots](#screenshots)
@@ -68,6 +74,17 @@ Use this repository as your source of truth, then deploy changes into live HA:
 ```
 
 If `/Volumes/config` is not mounted, the script exits with a clear message and does nothing.
+
+## Linting
+Run:
+
+```bash
+./lint.sh
+```
+
+What it does:
+- syntax-checks all Python files in `custom_components/ir_fan_control`
+- runs `ruff` checks if `ruff` is installed
 
 ## Configuration
 Required:

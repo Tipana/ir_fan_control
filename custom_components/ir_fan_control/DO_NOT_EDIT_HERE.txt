@@ -1,12 +1,12 @@
-DO NOT EDIT THIS LIVE FOLDER DIRECTLY
+IMPORTANT: This file exists in TWO places after deploy.
 
-Live path:
-/config/custom_components/ir_fan_control
+1) SOURCE (edit here):
+   /config/ha_vibecode_git/custom_components/ir_fan_control
 
-Source-of-truth repo path:
-/config/ha_vibecode_git/custom_components/ir_fan_control
+2) LIVE RUNTIME COPY (do not edit here):
+   /config/custom_components/ir_fan_control
 
-Workflow:
-1) Edit in ha_vibecode_git
-2) Run ./deploy.sh from /config/ha_vibecode_git
-3) Restart Home Assistant
+Rule:
+- Edit files only in the SOURCE path.
+- Deploy with: /config/ha_vibecode_git/deploy.sh
+- Restart Home Assistant.

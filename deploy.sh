@@ -19,6 +19,7 @@ fi
 mkdir -p "$TARGET_DIR"
 
 rsync -a --delete \
+  --inplace \
   --exclude=".git" \
   --exclude=".vscode" \
   --exclude="__pycache__" \

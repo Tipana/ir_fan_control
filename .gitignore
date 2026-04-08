@@ -3,6 +3,7 @@
 !README.md
 !LICENSE
 !deploy.sh
+!lint.sh
 !custom_components/
 !custom_components/ir_fan_control/
 !custom_components/ir_fan_control/**
